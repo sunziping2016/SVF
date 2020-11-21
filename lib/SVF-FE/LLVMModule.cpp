@@ -85,6 +85,8 @@ SVFModule* LLVMModuleSet::buildSVFModule(const std::vector<std::string> &moduleN
     else
         SVFModule::setPagFromTXT(Options::Graphtxt.getValue());
 
+    // TODO(Sun Ziping): change to smart ptr to avoid memory leak.
+    //                   so many similar issues.
     if(!moduleNameVec.empty())
         svfModule = new SVFModule(*moduleNameVec.begin());
     else
@@ -269,6 +271,7 @@ void LLVMModuleSet::buildFunToFunMap()
     Set<string>::iterator declIter, defIter;
     declIter = declNames.begin();
     defIter = defNames.begin();
+    // TODO(Sun Ziping): Seem to wrongly assume order in collections.
     while (declIter != declNames.end() && defIter != defNames.end())
     {
         if (*declIter < *defIter)

@@ -1,0 +1,35 @@
+digraph {
+  rankdir=LR
+  subgraph cluster_inputs {
+    graph[style=filled,color=orange,fillcolor=yellow, label="Inputs"]
+    p[shape=box, label="p\nNode type: Argument\lType: i32*\l"]
+    p_1[shape=box, label="p[1]\nNode type: Argument\lType: i32\l"]
+  }
+  subgraph cluster_outputs {
+    graph[style=filled,color=lightblue,fillcolor=cyan, label="Outputs"]
+    result[shape=box, label="ret\nNode type: Copy\lType: i32\l"]
+  }
+  null[shape=box, label="null\nNode type: Constant\lType: i32*\l"]
+  icmp[shape=record, label="p != null\nNode type: Operator\lOp Code: icmp ne\lType: bool\l|{{<icmp_lhs>lhs|<icmp_rhs>rhs}|<icmp_result>result}"]
+  p -> icmp:icmp_lhs
+  null -> icmp:icmp_rhs
+  one[shape=box, label="1\nNode type: Constant\lType: i64\l"]
+  zero[shape=box, label="0\nNode type: Constant\lType: i32\l"]
+  gep[shape=record, label="p + 1\nNode type: Operator\lOp Code: gep\lType: i32*\l|{{<gep_ptr>ptr|<gep_idx>idx}|<gep_result>result}"]
+  p->gep:gep_ptr
+  one->gep:gep_idx
+  deref[shape=box, label="p[1]\nNode type: Deref"]
+  gep:gep_result->deref
+  icmp:icmp_result->gep[style=dashed,color=purple,label="true"]
+  icmp:icmp_result->deref[style=dashed,color=purple,label="true"]
+  phi[shape=record, label="p ? p[1] : 0\nNode type: Phi\lType: i32\l|{{<phi_br1>br1|<phi_br2>br2}|<phi_result>result}"]
+  proxy1[shape=circle,style=filled,label="", width=0.05,color=red]
+  proxy2[shape=circle,style=filled,label="", width=0.05,color=red]
+  icmp:icmp_result->proxy1[style=dashed,color=red,label="true"]
+  icmp:icmp_result->proxy2[style=dashed,color=red,label="false"]
+  p_1->proxy1[dir=none]
+  proxy1->phi:phi_br1
+  zero->proxy2[dir=none]
+  proxy2->phi:phi_br2
+  phi:phi_result->result
+}

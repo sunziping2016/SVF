@@ -118,6 +118,12 @@ public:
     }
 
     /// Get SVFG
+    inline SVFG* getSVFG()
+    {
+        return graph();
+    }
+
+    /// Get SVFG
     inline const SVFG* getSVFG() const
     {
         return graph();

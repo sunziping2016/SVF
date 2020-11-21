@@ -1,0 +1,61 @@
+digraph {
+  rankdir=LR
+  subgraph cluster_inputs {
+    graph[style=filled,color=orange,fillcolor=yellow, label="Inputs"]
+    b[shape=box, label="b\nNode type: Argument\lType: i1\l"]
+    i0[shape=box, label="i0\nNode type: Argument\lType: i32\l"]
+  }
+  subgraph cluster_outputs {
+    graph[style=filled,color=lightblue,fillcolor=cyan, label="Outputs"]
+    result[shape=box, label="ret\nNode type: Copy\lType: i32\l"]
+  }
+  one[shape=box, label="1\nNode type: Constant\lType: i32\l"]
+  zero[shape=box, label="0\nNode type: Constant\lType: i32\l"]
+  i1[shape=record, label="i1\nNode type: Phi\lType: i32\l|{{<i1_br1>br1|<i1_br2>br2}|<i1_result>result}"]
+  i3[shape=record, label="i3\nNode type: Phi\lType: i32\l|{{<i3_br1>br1|<i3_br2>br2}|<i3_result>result}"]
+  i4[shape=record, label="i4\nNode type: Phi\lType: i32\l|{{<i4_br1>br1|<i4_br2>br2}|<i4_result>result}"]
+  i2[shape=record, label="i2 = i1 - 1\nNode type: Operator\lOp Code: sub\lType: i32\l|{{<i2_lhs>lhs|<i2_rhs>rhs}|<i2_result>result}"]
+  i2_icmp[shape=record, label="i2 \< 0\nNode type: Operator\lOp Code: icmp slt\lType: bool\l|{{<i2_icmp_lhs>lhs|<i2_icmp_rhs>rhs}|<i2_icmp_result>result}"]
+  i3_icmp[shape=record, label="i3 \> 0\nNode type: Operator\lOp Code: icmp set\lType: bool\l|{{<i3_icmp_lhs>lhs|<i3_icmp_rhs>rhs}|<i3_icmp_result>result}"]
+  i1:i1_result->i2:i2_lhs
+  one->i2:i2_rhs
+  i2:i2_result->i2_icmp:i2_icmp_lhs
+  zero->i2_icmp:i2_icmp_rhs
+  i3:i3_result->i3_icmp:i3_icmp_lhs
+  zero->i3_icmp:i3_icmp_rhs
+  i1_proxy1[shape=circle,style=filled,label="", width=0.05,color=red]
+  i1_proxy2[shape=circle,style=filled,label="", width=0.05,color=red]
+  i0->i1_proxy1[dir=none]
+  i1_proxy1->i1:i1_br1
+  i3:i3_result->i1_proxy2[dir=none]
+  i1_proxy2->i1:i1_br2
+  i3_proxy1[shape=circle,style=filled,label="", width=0.05,color=red]
+  i3_proxy2[shape=circle,style=filled,label="", width=0.05,color=red]
+  i0->i3_proxy1[dir=none]
+  i3_proxy1->i3:i3_br1
+  i2:i2_result->i3_proxy2[dir=none]
+  i3_proxy2->i3:i3_br2
+  i4_proxy1[shape=circle,style=filled,label="", width=0.05,color=red]
+  i4_proxy2[shape=circle,style=filled,label="", width=0.05,color=red]
+  i2:i2_result->i4_proxy1[dir=none]
+  i4_proxy1->i4:i4_br1
+  i3:i3_result->i4_proxy2[dir=none]
+  i4_proxy2->i4:i4_br2
+  b->i1_proxy1[style=dashed,color=red,label="true"]
+  i3_icmp:i3_icmp_result->i1_proxy2[style=dashed,color=red,label="true"]
+  b->i3_proxy1[style=dashed,color=red,label="false"]
+  i2_icmp:i2_icmp_result->i3_proxy2[style=dashed,color=red,label="false"]
+  i2_icmp:i2_icmp_result->i4_proxy1[style=dashed,color=red,label="true"]
+  i3_icmp:i3_icmp_result->i4_proxy2[style=dashed,color=red,label="false"]
+  i4:i4_result->result
+  b->i1[style=dashed,color=purple,label="true"]
+  b->i2[style=dashed,color=purple,label="true"]
+  b->i2_icmp[style=dashed,color=purple,label="true"]
+  b->i3[style=dashed,color=purple,label="false"]
+  b->i3_icmp[style=dashed,color=purple,label="false"]
+  i2_icmp:i2_icmp_result->i3[style=dashed,color=purple,label="false"]
+  i2_icmp:i2_icmp_result->i3_icmp[style=dashed,color=purple,label="false"]
+  i3_icmp:i3_icmp_result->i1[style=dashed,color=purple,label="true"]
+  i3_icmp:i3_icmp_result->i2[style=dashed,color=purple,label="true"]
+  i3_icmp:i3_icmp_result->i2_icmp[style=dashed,color=purple,label="true"]
+}

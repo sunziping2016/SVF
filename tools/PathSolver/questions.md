@@ -1,0 +1,6 @@
+# Questions About SVF
+
+1. [`lib/SABER/SrcSnkDDA.cpp:190`](https://github.com/sunziping2016/SVF/blob/master/lib/SABER/SrcSnkDDA.cpp#L190): Why doest the forward search stop at globals?
+2. [`lib/SABER/SrcSnkDDA.cpp:142`](https://github.com/sunziping2016/SVF/blob/master/lib/SABER/SrcSnkDDA.cpp#L142): Why directly `return false` instead of `continue`? So does [`lib/SABER/SrcSnkDDA.cpp:164`](https://github.com/sunziping2016/SVF/blob/master/lib/SABER/SrcSnkDDA.cpp#L164).
+3. Why `exit`-contained basic blocks are filtered out in `PathCondAllocator::evaluateBranchCond` and `PathCondAllocator::evaluateLoopExitBranch`? `exit` indicates the program execution aborted, not the contained basic block unreachable.
+4. [`PathCondAllocator::allocateForBB`](https://github.com/sunziping2016/SVF/blob/4ba2896c1c6c1d13559e051ccc76077ebce757af/lib/Util/PathCondAllocator.cpp#L82): The branch conditions satisfy that for any two different conditions, the conjunction of them is false. But they doesn't satisfy that the disjunction of all conditions is true, which suggests this approach may not model branches well.
